@@ -1,0 +1,12 @@
+networks:
+  app_network:
+    external: true
+services:
+  ycusriya_app:
+    build: .
+    container_name: ycusriya_app
+    restart: always
+    ports:
+      - "127.0.0.1:9010:80"   # Nginx on host will proxy to this
+    networks:
+      - app_network

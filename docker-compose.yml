@@ -10,3 +10,15 @@ services:
       - "127.0.0.1:9010:80"   # Nginx on host will proxy to this
     networks:
       - app_network
+    depends_on:
+      - ycusriya_api
+
+  ycusriya_api:
+    build: ./api
+    container_name: ycusriya_api
+    restart: always
+    env_file:
+      - ./api/.env          # create this on the server, NOT committed to git
+    networks:
+      - app_network
+    # no ports published -- only reachable inside app_network by ycusriya_app

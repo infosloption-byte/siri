@@ -4,19 +4,42 @@ import { Mail, Phone, ExternalLink, Globe, ArrowUpRight } from "lucide-react";
 import { Container, SectionHeading, TerminalFrame, PrimaryButton } from "../components/ui";
 import { profile, referees } from "../data/content";
 
+type SubmitStatus = "idle" | "sending" | "sent" | "error";
+
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [projectType, setProjectType] = useState("New build");
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const subject = encodeURIComponent(`New enquiry from ${name || "your website"} — ${projectType}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nProject type: ${projectType}\n\n${message}`
-    );
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+    setStatus("sending");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, projectType, message }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+
+      setStatus("sent");
+      setName("");
+      setEmail("");
+      setProjectType("New build");
+      setMessage("");
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    }
   }
 
   return (
@@ -25,7 +48,7 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="Let's talk about what you're building"
-          description="Fill in a few details and it'll open a pre-filled email to me directly — no forms disappearing into a database somewhere."
+          description="Fill in a few details and it'll land straight in my inbox — no forms disappearing into a database somewhere."
         />
 
         <div className="grid gap-10 md:grid-cols-[1fr_1.1fr]">
@@ -123,9 +146,16 @@ export default function Contact() {
                 />
               </label>
 
-              <PrimaryButton type="submit">
-                Send enquiry <ArrowUpRight size={16} />
+              <PrimaryButton type="submit" disabled={status === "sending"}>
+                {status === "sending" ? "Sending…" : "Send enquiry"} <ArrowUpRight size={16} />
               </PrimaryButton>
+
+              {status === "sent" && (
+                <p className="text-sm text-phosphor">Thanks — your message is in my inbox. I'll reply soon.</p>
+              )}
+              {status === "error" && (
+                <p className="text-sm text-red-500">{errorMsg}</p>
+              )}
             </div>
           </form>
         </div>

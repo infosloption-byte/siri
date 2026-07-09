@@ -78,6 +78,7 @@ export function PrimaryButton({
   onClick,
   type = "button",
   download,
+  disabled,
 }: {
   children: ReactNode;
   href?: string;
@@ -85,9 +86,10 @@ export function PrimaryButton({
   onClick?: () => void;
   type?: "button" | "submit";
   download?: boolean;
+  disabled?: boolean;
 }) {
   const cls =
-    "inline-flex items-center justify-center gap-2 bg-copper px-5 py-3 font-mono text-sm font-medium text-bg transition-colors hover:bg-[#D68952] focus-visible:outline-phosphor";
+    "inline-flex items-center justify-center gap-2 bg-copper px-5 py-3 font-mono text-sm font-medium text-bg transition-colors hover:bg-[#D68952] focus-visible:outline-phosphor disabled:cursor-not-allowed disabled:opacity-60";
   if (to) {
     return (
       <Link to={to} className={cls}>
@@ -103,7 +105,7 @@ export function PrimaryButton({
     );
   }
   return (
-    <button type={type} onClick={onClick} className={cls}>
+    <button type={type} onClick={onClick} className={cls} disabled={disabled}>
       {children}
     </button>
   );

@@ -1,8 +1,13 @@
 import { Container, SectionHeading, TagPill } from "../components/ui";
 import ProjectCard from "../components/ProjectCard";
 import { projects, portfolioProjects } from "../data/content";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Work() {
+  usePageTitle(
+    "Work",
+    "Products designed, built, and shipped end to end — Voxora, Ubiq Editor, SL Option, OREL Innovation, plus client and contract work."
+  );
   return (
     <>
       <section className="border-b border-border">

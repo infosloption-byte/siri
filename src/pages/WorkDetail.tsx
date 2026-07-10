@@ -3,10 +3,16 @@ import { ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { Container, StatusBadge, TagPill, PrimaryButton, GhostButton } from "../components/ui";
 import { projects } from "../data/content";
 import NotFound from "./NotFound";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function WorkDetail() {
   const { slug } = useParams();
   const project = projects.find((p) => p.slug === slug);
+
+  // Hook must run unconditionally on every render (Rules of Hooks),
+  // so this sits above the early NotFound return, using optional chaining.
+  usePageTitle(project?.name, project?.tagline);
+
   if (!project) return <NotFound />;
 
   const idx = projects.findIndex((p) => p.slug === slug);

@@ -1,7 +1,9 @@
 import { Container, SectionHeading, TagPill, PrimaryButton } from "../components/ui";
 import { experience, education, skillGroups, profile } from "../data/content";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function About() {
+  usePageTitle("About", profile.summary);
   return (
     <>
       <section className="border-b border-border">

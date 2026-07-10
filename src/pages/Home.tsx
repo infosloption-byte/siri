@@ -10,8 +10,10 @@ import {
 } from "../components/ui";
 import ProjectCard from "../components/ProjectCard";
 import { profile, projects, skillGroups, experience } from "../data/content";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Home() {
+  usePageTitle(); // root route — just use the site name
   const liveProjects = projects.slice(0, 4);
   const recentRoles = experience.slice(0, 3);
 

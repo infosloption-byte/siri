@@ -1,6 +1,8 @@
 import { Container, PrimaryButton } from "../components/ui";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function NotFound() {
+  usePageTitle("Page Not Found", "This page doesn't exist. Head back to the homepage.");
   return (
     <Container className="flex flex-col items-center justify-center py-32 text-center">
       <p className="font-mono text-sm text-copper">error 404</p>

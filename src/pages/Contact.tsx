@@ -3,10 +3,12 @@ import type { FormEvent } from "react";
 import { Mail, Phone, ExternalLink, Globe, ArrowUpRight } from "lucide-react";
 import { Container, SectionHeading, TerminalFrame, PrimaryButton } from "../components/ui";
 import { profile, referees } from "../data/content";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 type SubmitStatus = "idle" | "sending" | "sent" | "error";
 
 export default function Contact() {
+  usePageTitle("Contact", "Get in touch about a new build, a contract engagement, or a technical question.");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [projectType, setProjectType] = useState("New build");

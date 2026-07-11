@@ -8,7 +8,9 @@ export default function Footer() {
     <footer className="border-t border-border bg-surface">
       <Container className="grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
-          <p className="font-display text-lg text-ink">{profile.name}</p>
+          <p className="font-display text-lg text-ink">
+            {profile.shortName} <span className="font-mono text-sm text-muted">({profile.alias})</span>
+          </p>
           <p className="mt-2 max-w-xs text-sm text-muted">{profile.role}</p>
           <p className="mt-4 font-mono text-xs text-mutedDim">
             root@ycusriya:~$ status --uptime

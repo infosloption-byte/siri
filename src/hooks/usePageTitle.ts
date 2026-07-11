@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE_NAME = "Umayanga Sriyarathna";
+const SITE_NAME = "Umayanga Sriyarathna (Sriya)";
 const DEFAULT_DESCRIPTION =
   "Y.C. Umayanga Sriyarathna — Full-stack engineer and product builder. Voxora, Ubiq Editor, SL Option, OREL Innovation. Architecture through production, end to end.";
 

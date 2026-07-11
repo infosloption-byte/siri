@@ -29,6 +29,7 @@ export default function Home() {
               <h1 className="mt-4 font-display text-4xl leading-[1.1] text-ink md:text-6xl">
                 {profile.name}
               </h1>
+              <p className="mt-3 font-mono text-sm text-phosphor">// aka {profile.alias}</p>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
                 {profile.tagline}
               </p>

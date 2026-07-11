@@ -135,19 +135,32 @@ try {
   console.error("Failed to parse GA_SERVICE_ACCOUNT_KEY_BASE64:", err.message);
 }
 
-app.get("/analytics/summary", requireAuth, async (_req, res) => {
+const ALLOWED_RANGES = { "7": "7daysAgo", "28": "28daysAgo", "90": "90daysAgo" };
+
+app.get("/analytics/summary", requireAuth, async (req, res) => {
   if (!analyticsClient || !process.env.GA_PROPERTY_ID) {
     return res.status(500).json({ ok: false, error: "Analytics not configured on the server." });
   }
 
+  const rangeKey = ALLOWED_RANGES[req.query.range] ? req.query.range : "28";
+  const startDate = ALLOWED_RANGES[rangeKey];
   const property = `properties/${process.env.GA_PROPERTY_ID}`;
+  const dateRanges = [{ startDate, endDate: "today" }];
 
   try {
-    const [overview, byPage, byCountry, timeseries] = await Promise.all([
-      // Totals for the last 28 days
+    const [
+      overview,
+      byPage,
+      byCountry,
+      timeseries,
+      byChannel,
+      byDevice,
+      byNewReturning,
+      contactConversions,
+    ] = await Promise.all([
       analyticsClient.runReport({
         property,
-        dateRanges: [{ startDate: "28daysAgo", endDate: "today" }],
+        dateRanges,
         metrics: [
           { name: "activeUsers" },
           { name: "screenPageViews" },
@@ -155,40 +168,74 @@ app.get("/analytics/summary", requireAuth, async (_req, res) => {
           { name: "bounceRate" },
         ],
       }),
-      // Top pages
       analyticsClient.runReport({
         property,
-        dateRanges: [{ startDate: "28daysAgo", endDate: "today" }],
+        dateRanges,
         dimensions: [{ name: "pagePath" }],
         metrics: [{ name: "screenPageViews" }],
         orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
         limit: 10,
       }),
-      // Top countries
       analyticsClient.runReport({
         property,
-        dateRanges: [{ startDate: "28daysAgo", endDate: "today" }],
+        dateRanges,
         dimensions: [{ name: "country" }],
         metrics: [{ name: "activeUsers" }],
         orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }],
         limit: 8,
       }),
-      // Daily active users, last 28 days, for a trend chart
       analyticsClient.runReport({
         property,
-        dateRanges: [{ startDate: "28daysAgo", endDate: "today" }],
+        dateRanges,
         dimensions: [{ name: "date" }],
         metrics: [{ name: "activeUsers" }],
         orderBys: [{ dimension: { dimensionName: "date" } }],
       }),
+      // Traffic sources — direct / organic search / social / referral / etc.
+      analyticsClient.runReport({
+        property,
+        dateRanges,
+        dimensions: [{ name: "sessionDefaultChannelGroup" }],
+        metrics: [{ name: "sessions" }],
+        orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+      }),
+      // Device breakdown — desktop / mobile / tablet
+      analyticsClient.runReport({
+        property,
+        dateRanges,
+        dimensions: [{ name: "deviceCategory" }],
+        metrics: [{ name: "activeUsers" }],
+        orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }],
+      }),
+      // New vs returning visitors
+      analyticsClient.runReport({
+        property,
+        dateRanges,
+        dimensions: [{ name: "newVsReturning" }],
+        metrics: [{ name: "activeUsers" }],
+      }),
+      // Contact form conversions — fired as a custom gtag event on successful submit
+      analyticsClient.runReport({
+        property,
+        dateRanges,
+        metrics: [{ name: "eventCount" }],
+        dimensionFilter: {
+          filter: {
+            fieldName: "eventName",
+            stringFilter: { value: "contact_form_submit" },
+          },
+        },
+      }),
     ]);
 
     const row0 = overview[0]?.rows?.[0]?.metricValues || [];
+    const totalUsers = Number(row0[0]?.value || 0);
 
     res.json({
       ok: true,
+      range: rangeKey,
       overview: {
-        activeUsers: Number(row0[0]?.value || 0),
+        activeUsers: totalUsers,
         pageViews: Number(row0[1]?.value || 0),
         avgSessionSeconds: Math.round(Number(row0[2]?.value || 0)),
         bounceRate: Number(row0[3]?.value || 0),
@@ -202,9 +249,27 @@ app.get("/analytics/summary", requireAuth, async (_req, res) => {
         users: Number(r.metricValues[0].value),
       })),
       timeseries: (timeseries[0]?.rows || []).map((r) => ({
-        date: r.dimensionValues[0].value, // format YYYYMMDD
+        date: r.dimensionValues[0].value,
         users: Number(r.metricValues[0].value),
       })),
+      trafficSources: (byChannel[0]?.rows || []).map((r) => ({
+        channel: r.dimensionValues[0].value,
+        sessions: Number(r.metricValues[0].value),
+      })),
+      devices: (byDevice[0]?.rows || []).map((r) => ({
+        device: r.dimensionValues[0].value,
+        users: Number(r.metricValues[0].value),
+      })),
+      newVsReturning: (byNewReturning[0]?.rows || []).map((r) => ({
+        type: r.dimensionValues[0].value, // "new" | "returning"
+        users: Number(r.metricValues[0].value),
+      })),
+      contactConversions: {
+        count: Number(contactConversions[0]?.rows?.[0]?.metricValues?.[0]?.value || 0),
+        rate: totalUsers > 0
+          ? Number(contactConversions[0]?.rows?.[0]?.metricValues?.[0]?.value || 0) / totalUsers
+          : 0,
+      },
     });
   } catch (err) {
     console.error("GA4 report failed:", err.message);

@@ -5,6 +5,12 @@ import { Container, SectionHeading, TerminalFrame, PrimaryButton } from "../comp
 import { profile, referees } from "../data/content";
 import { usePageTitle } from "../hooks/usePageTitle";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 type SubmitStatus = "idle" | "sending" | "sent" | "error";
 
 export default function Contact() {
@@ -32,6 +38,9 @@ export default function Contact() {
       if (!res.ok || !data.ok) {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
+
+      // Tracked as a GA4 conversion event — shows up on the analytics dashboard
+      window.gtag?.("event", "contact_form_submit", { project_type: projectType });
 
       setStatus("sent");
       setName("");

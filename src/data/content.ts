@@ -1,7 +1,8 @@
 // Central content store — edit this file to update site copy without touching components.
 
 export const profile = {
-  name: "Y.C. Umayanga Sriyarathna",
+  name: "Yaddehi Chathura Umayanga Sriyarathna",
+  alias: "Sriya",
   shortName: "Umayanga Sriyarathna",
   handle: "ycusriya",
   role: "Freelance Full-Stack Developer & Product Builder",

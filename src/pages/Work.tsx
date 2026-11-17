@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight, Code } from "lucide-react";
 import { Container, SectionHeading, TagPill } from "../components/ui";
 import ProjectCard from "../components/ProjectCard";
 import { projects, portfolioProjects, publicRepositories, type RepositoryGroup } from "../data/content";
@@ -56,7 +56,7 @@ export default function Work() {
                     rel="noopener noreferrer"
                     className="mt-5 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wide text-copper hover:text-phosphor"
                   >
-                    <Github size={15} />
+                    <Code size={15} />
                     {p.sourceLabel ?? "View code on GitHub"}
                     <ArrowUpRight size={14} />
                   </a>
@@ -101,7 +101,7 @@ export default function Work() {
                       <div className="mt-5 flex items-center justify-between gap-3">
                         <TagPill>{repo.language}</TagPill>
                         <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide text-phosphor">
-                          <Github size={14} /> View code
+                          <Code size={14} /> View code
                         </span>
                       </div>
                     </a>

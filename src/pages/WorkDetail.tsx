@@ -45,8 +45,9 @@ export default function WorkDetail() {
             {project.url && (
               <div className="mt-8">
                 <PrimaryButton href={project.url}>
-                  Visit {project.name} <ArrowUpRight size={16} />
+                  {project.sourceNote ? "View related GitHub code" : "View code on GitHub"} <ArrowUpRight size={16} />
                 </PrimaryButton>
+                {project.sourceNote && <p className="mt-3 max-w-xl text-xs text-muted">{project.sourceNote}</p>}
               </div>
             )}
           </Container>

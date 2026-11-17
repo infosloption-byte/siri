@@ -65,18 +65,18 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Live systems board */}
+      {/* Featured systems board */}
       <section className="border-b border-border">
         <Container className="py-20">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
               eyebrow="Systems monitor"
-              title="What's live right now"
-              description="Four products I designed, built, and operate — spanning AI infrastructure, developer tools, fintech, and strategic concepts."
+              title="Featured builds"
+              description="Four selected projects spanning AI infrastructure, developer tools, fintech, and strategic concepts. Explore the case studies and their public source repositories."
             />
             <div className="mb-10 hidden items-center gap-2 font-mono text-xs text-muted md:flex">
               <Terminal size={14} className="text-phosphor" />
-              4 monitored services
+              4 featured projects
             </div>
           </div>
 

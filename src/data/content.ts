@@ -26,6 +26,7 @@ export interface Project {
   status: Status;
   statusLabel: string;
   url?: string;
+  sourceNote?: string;
   tagline: string;
   summary: string;
   problem: string;
@@ -41,7 +42,7 @@ export const projects: Project[] = [
     name: "Voxora",
     status: "live",
     statusLabel: "In production",
-    url: "https://usevoxora.online",
+    url: "https://github.com/infosloption-byte/voice-saas",
     tagline: "AI voice-cloning SaaS running on GPU infrastructure across two clouds.",
     summary:
       "Voxora lets users build custom voice profiles from multi-clip audio uploads and generate high-quality synthetic speech, with a tiered subscription model and a production GPU inference pipeline spanning two providers.",
@@ -68,7 +69,7 @@ export const projects: Project[] = [
     name: "Ubiq Editor",
     status: "live",
     statusLabel: "In production",
-    url: "https://ubiq-editor.space",
+    url: "https://github.com/infosloption-byte/ubiq",
     tagline: "Browser-based coding platform with hardened container security and real billing.",
     summary:
       "A cloud AI coding platform where users write, run, and manage code through a browser IDE with an integrated terminal — subscription-aware, and built on a Docker architecture hardened against the ways multi-tenant code execution can go wrong.",
@@ -93,7 +94,8 @@ export const projects: Project[] = [
     name: "SL Option",
     status: "building",
     statusLabel: "Production-ready, pre-launch",
-    url: "https://www.sloption.com",
+    url: "https://github.com/infosloption-byte/slspot",
+    sourceNote: "Related public SL Spot trading-terminal project; the original SL Option codebase is not publicly available.",
     tagline: "Binary options trading platform for the Sri Lankan market.",
     summary:
       "A full trading platform with live charts, a dual wallet system, and 2FA security — technically complete, currently held at the regulatory and payment-gateway line rather than the engineering one.",
@@ -118,7 +120,7 @@ export const projects: Project[] = [
     name: "OREL Innovation",
     status: "concept",
     statusLabel: "Strategic concept",
-    url: "https://orel.ycusriya.online",
+    url: "https://github.com/infosloption-byte/orel-hub",
     tagline: "Sri Lanka's first integrated smart-infrastructure ecosystem — payments, vending, EV charging.",
     summary:
       "A strategic concept combining digital payments (OREL Tap), IoT vending machines (OREL Vending), and EV charging stations (OREL Charge) into one shared-infrastructure ecosystem, originally conceived during my time at Orel IT.",
@@ -140,56 +142,101 @@ export const projects: Project[] = [
   },
 ];
 
-export const portfolioProjects = [
+export interface PortfolioProject {
+  name: string;
+  url?: string;
+  sourceLabel?: string;
+  sourceNote?: string;
+  description: string;
+  stack: string[];
+}
+
+export const portfolioProjects: PortfolioProject[] = [
   {
     name: "RDB Bank Assets Tracking",
-    url: "https://rdb.ycusriya.online",
+    url: "https://github.com/infosloption-byte/assetmov",
+    sourceLabel: "View public successor on GitHub",
+    sourceNote: "AssetMov is a public rebuild of the legacy RDB asset-tracking application.",
     description:
       "Barcode-based enterprise asset tracking for RDB Bank Sri Lanka: check-in/check-out, branch-level movement tracking, and depreciation calculations.",
     stack: ["Laravel", "MySQL", "JavaScript"],
   },
   {
     name: "Synergy Integrated Services (SISFS Australia)",
-    url: "https://sisfs.ycusriya.online",
     description:
       "Property maintenance and cleaning services portal with a companion mobile app for the Australian market: task location tracking, employee management, job inspections, expense tracking.",
     stack: ["Laravel", "AngularJS", "REST API", "MySQL", "AWS"],
   },
   {
     name: "BB Productions",
-    url: "https://bbp.ycusriya.online",
     description:
       "Event management system with ticket purchasing and payment integration, event creation, inventory management, and real-time sales tracking.",
     stack: ["Laravel", "AngularJS", "REST API", "MySQL", "AWS"],
   },
   {
     name: "Databank",
-    url: "https://databank.ycusriya.online",
+    url: "https://github.com/infosloption-byte/databank",
     description:
       "Document management system for organizational storage: categorization, version control, and secure access permissions.",
     stack: ["Laravel", "AngularJS", "AWS"],
   },
   {
     name: "Sales Force Automation System",
-    url: "https://sfa.ycusriya.online",
     description:
       "Enterprise SFA streamlining sales through automated workflows, lead management, pipeline tracking, and reporting.",
     stack: ["Laravel", "MySQL", "jQuery", "AJAX"],
   },
   {
     name: "Debug Service Desk",
-    url: "https://debug.ycusriya.online",
     description:
       "Service desk system for asset management, customer inquiries, warranty tracking, and support ticket management with automated workflows.",
     stack: ["Laravel", "AngularJS", "AWS"],
   },
   {
     name: "Southern Star Tattoo",
-    url: "https://southernstartattoo.info/",
+    url: "https://github.com/infosloption-byte/sst",
     description:
       "Full-stack responsive site with a custom Laravel backend and Angular frontend, covering UI/UX, API development, booking, and content management.",
     stack: ["Laravel", "Angular"],
   },
+];
+
+export type RepositoryGroup = "AI & developer tools" | "Platforms & products" | "Client & business sites" | "Creative & portfolio";
+
+export interface PublicRepository {
+  name: string;
+  slug: string;
+  description: string;
+  group: RepositoryGroup;
+  language: string;
+}
+
+// Public repositories under https://github.com/infosloption-byte.
+// Source availability does not imply a deployed or production-ready project.
+export const publicRepositories: PublicRepository[] = [
+  { name: "Voxora Voice Platform", slug: "voice-saas", description: "Voxora voice cloning, transcription and speech generation.", group: "AI & developer tools", language: "TypeScript" },
+  { name: "Voxora Video Director", slug: "video-director", description: "AI-assisted research, storyboarding, narration and video rendering.", group: "AI & developer tools", language: "JavaScript" },
+  { name: "Ubiq Editor", slug: "ubiq", description: "Browser-based development workspace and code editing platform.", group: "AI & developer tools", language: "TypeScript" },
+  { name: "W-Bot", slug: "w-bot", description: "WhatsApp group translation and configurable group message monitoring.", group: "AI & developer tools", language: "TypeScript" },
+  { name: "Movie Match", slug: "movie-match", description: "Movie recommendations using storyline embeddings and semantic search.", group: "AI & developer tools", language: "PHP" },
+  { name: "BuildHire", slug: "candidate", description: "Recruitment, candidate management and interview scoring workflows.", group: "Platforms & products", language: "TypeScript" },
+  { name: "AssetMov", slug: "assetmov", description: "Multi-tenant asset lifecycle and inventory management platform.", group: "Platforms & products", language: "TypeScript" },
+  { name: "SL Options Market", slug: "sl-ecom", description: "Sri Lankan e-commerce storefront, admin and Express API.", group: "Platforms & products", language: "JavaScript" },
+  { name: "E-Shop", slug: "e-shop", description: "E-commerce codebase with separate frontend and backend.", group: "Platforms & products", language: "JavaScript" },
+  { name: "SL Spot", slug: "slspot", description: "React trading terminal with a Fastify API and admin console.", group: "Platforms & products", language: "TypeScript" },
+  { name: "SL Options", slug: "sl-options", description: "SL Options company website, services and portfolio.", group: "Platforms & products", language: "TypeScript" },
+  { name: "OREL Hub", slug: "orel-hub", description: "Smart infrastructure concept covering payments, vending and EV charging.", group: "Platforms & products", language: "HTML" },
+  { name: "SL Hub", slug: "sl-hub", description: "Infrastructure concept site covering payments, vending and EV charging.", group: "Platforms & products", language: "HTML" },
+  { name: "KandyAds", slug: "kandyads", description: "Advertising company frontend and administration platform.", group: "Client & business sites", language: "TypeScript" },
+  { name: "Earndeck Shipping", slug: "earndeck-shipping", description: "Next.js marine surveying and maritime consultancy website.", group: "Client & business sites", language: "TypeScript" },
+  { name: "Southern Star Tattoo", slug: "sst", description: "React rebuild of the Southern Star Tattoo website.", group: "Client & business sites", language: "TypeScript" },
+  { name: "Southern Star Tattoo — Legacy", slug: "old-sst", description: "Earlier Laravel codebase for Southern Star Tattoo.", group: "Client & business sites", language: "Blade" },
+  { name: "Salon Belinda", slug: "salon-belinda", description: "Salon project with frontend, backend, shop and admin modules.", group: "Client & business sites", language: "TypeScript" },
+  { name: "Bogoda Engineering", slug: "beis", description: "Bogoda Engineering Integrated Services application.", group: "Client & business sites", language: "JavaScript" },
+  { name: "Databank", slug: "databank", description: "Laravel codebase for an organizational document management system.", group: "Client & business sites", language: "Blade" },
+  { name: "Smart Tattoo", slug: "smart-tattoo", description: "Tattoo-related application with frontend and backend modules.", group: "Client & business sites", language: "TypeScript" },
+  { name: "SL Ravan", slug: "sl-ravan", description: "Ravana-inspired 3D open-world exploration prototype.", group: "Creative & portfolio", language: "TypeScript" },
+  { name: "Sriya Portfolio", slug: "siri", description: "This personal portfolio website built with React, TypeScript and Vite.", group: "Creative & portfolio", language: "TypeScript" },
 ];
 
 export interface ExperienceEntry {

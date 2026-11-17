@@ -11,6 +11,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors()); // same-origin via nginx proxy anyway, but harmless
+if (process.env.VERCEL) app.set("trust proxy", 1);
+
+// Vercel Services forwards the /api path intact; the existing nginx
+// deployment removes the prefix before passing requests to Express.
+app.use((req, _res, next) => {
+  if (req.url.startsWith("/api/")) req.url = req.url.slice(4);
+  next();
+});
 
 // ---------- Contact form (existing) ----------
 
@@ -283,4 +291,8 @@ if (!JWT_SECRET) {
 }
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`API listening on :${PORT}`));
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => console.log(`API listening on :${PORT}`));
+}
+
+export default app;
